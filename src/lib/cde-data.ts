@@ -236,17 +236,11 @@ export async function createOwnerProject(input: {
 
 export async function createOwnerProjectWorkflow(input: {
   propertyId: string;
-  projectCode: string;
-  title: string;
-  projectType: "obra_nueva" | "remodelacion" | "ampliacion" | "renovacion" | "area_anexa" | "otro";
   architectEmail: string;
 }) {
   const client = requireSupabase();
   const { data, error } = await client.rpc("create_owner_project_workflow", {
     p_property_id: input.propertyId,
-    p_project_code: input.projectCode,
-    p_title: input.title,
-    p_project_type: input.projectType,
     p_architect_email: input.architectEmail,
   });
   if (error) throw error;

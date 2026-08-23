@@ -27,11 +27,11 @@ export const ROLE_LABELS: Record<RoleKey, string> = {
   hidrosanitaria: "Hidrosanitaria",
   paisajismo: "Paisajismo",
   mensura: "Mensura",
-  seguridad: "Seguridad / Guardianes",
+  seguridad: "Seguridad",
 };
 
 export const DEPARTMENT_LABELS: Record<string, string> = {
-  arquitectura: "Arquitectura y Diseño",
+  arquitectura: "Revisión Técnica",
   revision_tecnica: "Revisión Técnica",
   control_obras: "Control de Obras",
   legal: "Legal",
@@ -39,7 +39,7 @@ export const DEPARTMENT_LABELS: Record<string, string> = {
   hidrosanitaria: "Hidrosanitaria",
   paisajismo: "Paisajismo",
   mensura: "Mensura",
-  seguridad: "Seguridad y Guardianes",
+  seguridad: "Seguridad",
 };
 
 export type CDEState = "wip" | "shared" | "published" | "archive";

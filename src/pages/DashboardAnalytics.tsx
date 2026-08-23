@@ -12,14 +12,14 @@ const roleLabels: Record<string, string> = {
   admin: "Administrador General",
   arquitecto: "Arquitecto",
   contratista: "Contratista",
-  "revision-tecnica": "Arquitectura",
+  "revision-tecnica": "Revisión Técnica",
   "control-obras": "Control de Obras",
   legal: "Departamento Legal",
   electrica: "Ingeniería Eléctrica",
   hidrosanitaria: "Ingeniería Hidrosanitaria",
   paisajismo: "Paisajismo",
   mensura: "Mensura",
-  seguridad: "Seguridad y Guardianes",
+  seguridad: "Seguridad",
 };
 
 const statusLabels: Record<string, string> = {
@@ -82,7 +82,7 @@ export function DashboardAnalytics({ role, showMap = false }: { role: string; sh
     <div className="min-h-full flex-1 overflow-y-auto bg-surface-container-low p-4 pt-8 md:p-10">
       <div className="mx-auto max-w-[1300px] space-y-8">
         <header><p className="text-xs font-semibold uppercase tracking-[0.18em] text-secondary">CDE Costasur</p><h2 className="mt-2 text-4xl font-bold tracking-tight text-on-surface md:text-5xl">Dashboard {title}</h2><p className="mt-2 text-lg text-secondary">{description}</p></header>
-        {showMap && role === "revision-tecnica" && <CasaDeCampoMap title="Mapa GIS de Arquitectura" subtitle="Casa de Campo · La Romana · expedientes de revisión" heightClassName="h-[300px] md:h-[380px]" />}
+        {showMap && role === "revision-tecnica" && <CasaDeCampoMap title="Mapa GIS de Revisión Técnica" subtitle="Casa de Campo · La Romana · expedientes de revisión" heightClassName="h-[300px] md:h-[380px]" />}
         {showMap && role === "control-obras" && <CasaDeCampoMap title="Mapa GIS de Control de Obras" subtitle="Casa de Campo · La Romana · ubicación de expedientes" heightClassName="h-[300px] md:h-[380px]" />}
         {loading && <div className="rounded-3xl border border-outline-variant/30 bg-surface-container-lowest p-8 text-sm text-secondary">Cargando expedientes persistidos...</div>}
         {error && <div className="rounded-3xl border border-error/30 bg-error/10 p-8 text-sm text-error">{error}</div>}

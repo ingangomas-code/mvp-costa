@@ -81,6 +81,20 @@ export function Sidebar({
         { to: "/paisajismo", icon: "dashboard", label: "Dashboard" },
       ];
       break;
+    case 'mensura':
+      links = [
+        { to: "/mensura/revision", icon: "straighten", label: "Revisión de Mensura" },
+        { to: "/mensura/proyectos", icon: "folder_open", label: "Proyectos" },
+        { to: "/mensura", icon: "dashboard", label: "Dashboard" },
+      ];
+      break;
+    case 'seguridad':
+      links = [
+        { to: "/seguridad/revision", icon: "security", label: "Control de Seguridad" },
+        { to: "/seguridad/proyectos", icon: "folder_open", label: "Proyectos" },
+        { to: "/seguridad", icon: "dashboard", label: "Dashboard" },
+      ];
+      break;
     case 'admin':
       links = [
         { to: "/admin/mapa", icon: "admin_panel_settings", label: "Admin General" },
@@ -197,4 +211,3 @@ export function Sidebar({
     </>
   );
 }
-

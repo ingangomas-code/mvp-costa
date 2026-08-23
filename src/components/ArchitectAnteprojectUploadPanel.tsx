@@ -33,7 +33,7 @@ export function ArchitectAnteprojectUploadPanel({ projectId, onUploaded }: { pro
           <div>
             <p className="text-xs uppercase tracking-[0.18em] text-secondary">Paquete de anteproyecto</p>
             <h2 className="text-xl font-bold text-on-surface mt-2">Documentación requerida por categoría</h2>
-            <p className="text-sm text-secondary mt-2">Carga cada archivo en su grupo para que Arquitectura pueda revisar el expediente de forma ordenada. Los PDF y CAD quedan versionados y vinculados a Villa Demo 1.</p>
+            <p className="text-sm text-secondary mt-2">Carga cada archivo en su grupo para que Revisión Técnica pueda revisar el expediente de forma ordenada. Los PDF y CAD quedan versionados y vinculados a Villa Demo 1.</p>
           </div>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-3 mt-6">

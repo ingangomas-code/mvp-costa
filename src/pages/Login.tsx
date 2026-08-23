@@ -130,7 +130,7 @@ export function Login() {
             <div className="mt-10 pt-6 border-t border-outline-variant/20">
               <p className="text-xs text-[#4A5056] text-center leading-relaxed">
                 *Info Demo: Para probar los distintos perfiles, ingrese como usuario uno de los siguientes: <br/>
-                <span className="font-semibold text-[#4A5056]">admin, propietario, arquitecto, contratista, legal, arquitectura, obras, electrica, hidrosanitaria, paisajismo</span>
+                <span className="font-semibold text-[#4A5056]">admin, propietario, arquitecto, contratista, revisión técnica, control de obras, legal, eléctrica, hidrosanitaria, paisajismo, mensura y seguridad</span>
               </p>
             </div>
           </div>

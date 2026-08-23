@@ -1,30 +1,37 @@
-﻿import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+﻿import { lazy, Suspense } from "react";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { Layout } from "./components/Layout";
 import { RequireAuth } from "./components/RequireAuth";
-import { Login } from "./pages/Login";
-import { DocumentViewerPage } from "./pages/DocumentViewerPage";
-import { OwnerDashboard } from "./pages/OwnerDashboard";
-import { ProjectDetails } from "./pages/ProjectDetails";
-import { ArchitectPortal } from "./pages/ArchitectPortal";
-import { TechnicalReview } from "./pages/TechnicalReview";
-import { RevisionTecnicaProyectos } from "./pages/RevisionTecnicaProyectos";
-import { RevisionTecnicaProjectDetails } from "./pages/RevisionTecnicaProjectDetails";
-import { ControlDeObras } from "./pages/ControlDeObras";
-import { ControlDeObrasProyectos } from "./pages/ControlDeObrasProyectos";
-import { ControlDeObrasProjectDetails } from "./pages/ControlDeObrasProjectDetails";
-import { ContractorPortal } from "./pages/ContractorPortal";
-import { DepartmentDashboard } from "./pages/DepartmentDashboard";
-import { DashboardAnalytics } from "./pages/DashboardAnalytics";
-import { AdminMapaGeneral } from "./pages/AdminMapaGeneral";
-import { AdminProyectos } from "./pages/AdminProyectos";
-import { AdminDepartamentos } from "./pages/AdminDepartamentos";
-import { DepartmentProyectos } from "./pages/DepartmentProyectos";
-import { DepartmentProjectDetails } from "./pages/DepartmentProjectDetails";
+
+const Login = lazy(() => import("./pages/Login").then((module) => ({ default: module.Login })));
+const DocumentViewerPage = lazy(() => import("./pages/DocumentViewerPage").then((module) => ({ default: module.DocumentViewerPage })));
+const OwnerDashboard = lazy(() => import("./pages/OwnerDashboard").then((module) => ({ default: module.OwnerDashboard })));
+const ProjectDetails = lazy(() => import("./pages/ProjectDetails").then((module) => ({ default: module.ProjectDetails })));
+const ArchitectPortal = lazy(() => import("./pages/ArchitectPortal").then((module) => ({ default: module.ArchitectPortal })));
+const TechnicalReview = lazy(() => import("./pages/TechnicalReview").then((module) => ({ default: module.TechnicalReview })));
+const RevisionTecnicaProyectos = lazy(() => import("./pages/RevisionTecnicaProyectos").then((module) => ({ default: module.RevisionTecnicaProyectos })));
+const RevisionTecnicaProjectDetails = lazy(() => import("./pages/RevisionTecnicaProjectDetails").then((module) => ({ default: module.RevisionTecnicaProjectDetails })));
+const ControlDeObras = lazy(() => import("./pages/ControlDeObras").then((module) => ({ default: module.ControlDeObras })));
+const ControlDeObrasProyectos = lazy(() => import("./pages/ControlDeObrasProyectos").then((module) => ({ default: module.ControlDeObrasProyectos })));
+const ControlDeObrasProjectDetails = lazy(() => import("./pages/ControlDeObrasProjectDetails").then((module) => ({ default: module.ControlDeObrasProjectDetails })));
+const ContractorPortal = lazy(() => import("./pages/ContractorPortal").then((module) => ({ default: module.ContractorPortal })));
+const DepartmentDashboard = lazy(() => import("./pages/DepartmentDashboard").then((module) => ({ default: module.DepartmentDashboard })));
+const DashboardAnalytics = lazy(() => import("./pages/DashboardAnalytics").then((module) => ({ default: module.DashboardAnalytics })));
+const AdminMapaGeneral = lazy(() => import("./pages/AdminMapaGeneral").then((module) => ({ default: module.AdminMapaGeneral })));
+const AdminProyectos = lazy(() => import("./pages/AdminProyectos").then((module) => ({ default: module.AdminProyectos })));
+const AdminDepartamentos = lazy(() => import("./pages/AdminDepartamentos").then((module) => ({ default: module.AdminDepartamentos })));
+const DepartmentProyectos = lazy(() => import("./pages/DepartmentProyectos").then((module) => ({ default: module.DepartmentProyectos })));
+const DepartmentProjectDetails = lazy(() => import("./pages/DepartmentProjectDetails").then((module) => ({ default: module.DepartmentProjectDetails })));
+
+function RouteLoading() {
+  return <div className="grid min-h-[50vh] place-items-center text-sm text-secondary">Cargando vista…</div>;
+}
 
 export default function App() {
   return (
     <Router>
-      <Routes>
+      <Suspense fallback={<RouteLoading />}>
+        <Routes>
         <Route path="/" element={<Login />} />
         
         <Route element={<RequireAuth />}>
@@ -96,7 +103,7 @@ export default function App() {
 
         <Route path="/seguridad" element={<Layout role="seguridad" />}>
           <Route index element={<DashboardAnalytics role="seguridad" />} />
-          <Route path="revision" element={<DepartmentDashboard department="Seguridad y Guardianes" icon="security" type="control de accesos y seguridad de obra" deptKey="seguridad" />} />
+          <Route path="revision" element={<DepartmentDashboard department="Seguridad" icon="security" type="control de accesos y seguridad de obra" deptKey="seguridad" />} />
           <Route path="proyectos" element={<DepartmentProyectos department="Seguridad" deptKey="seguridad" />} />
           <Route path="proyectos/:id" element={<DepartmentProjectDetails department="Seguridad" deptKey="seguridad" />} />
         </Route>
@@ -109,7 +116,8 @@ export default function App() {
           <Route path="proyectos/:id" element={<ControlDeObrasProjectDetails />} /> 
         </Route>
         </Route>
-      </Routes>
+        </Routes>
+      </Suspense>
     </Router>
   );
 }

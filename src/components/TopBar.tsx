@@ -24,12 +24,14 @@ export function TopBar({ role, onToggleMobileMenu }: { role: string; onToggleMob
       case 'propietario': return { title: 'Portal Propietario', displayRole: 'Propietario', img: 'https://lh3.googleusercontent.com/aida-public/AB6AXuCatKvn5lAKx3QgYeqsY-EtOg0efyZfyE1K0RnRSgk5M4L3rXua07G968z0xG0zqpHX2KIIEmJs6JOwuw2hk-lSaP1FpFavtgTpAtB51UNvkytYZYVccPu9ttVEql1NC2q38WIKHETFCTzd3yV90MRlg2Bzm_xP78ykrPaWf5cc8v6T9TZuRhiRtwpsAsbVtPMLMMH0H0pupyztHu6BvcuFTXQQDEl_D6V26IaOId4uZMSHnVhHW_MS' };
       case 'arquitecto': return { title: 'Portal Arquitecto', displayRole: 'Arquitecto', img: 'https://lh3.googleusercontent.com/aida-public/AB6AXuCatKvn5lAKx3QgYeqsY-EtOg0efyZfyE1K0RnRSgk5M4L3rXua07G968z0xG0zqpHX2KIIEmJs6JOwuw2hk-lSaP1FpFavtgTpAtB51UNvkytYZYVccPu9ttVEql1NC2q38WIKHETFCTzd3yV90MRlg2Bzm_xP78ykrPaWf5cc8v6T9TZuRhiRtwpsAsbVtPMLMMH0H0pupyztHu6BvcuFTXQQDEl_D6V26IaOId4uZMSHnVhHW_MS' };
       case 'contratista': return { title: 'Portal Contratista', displayRole: 'Contratista', img: 'https://lh3.googleusercontent.com/aida-public/AB6AXuBj72r4YsI323w-356f9N1W6xyFyJdX6c6-zLQNRGrXXgTmW3QWdTx9RxyPiYMaMi1S5FFctr-SEMLXjmxSvGRSc7eQ8e_tegnTDelacB3acCtnK--u7YE9UV_G86S8HpYomgYAoUv8MVQjxUP_QcST9xAvTzfH51_tiDZNzz-cBSCSEVTiEJeQZUl6L8UKGLuOHtMa4pRF7k-H9fQGGq2S0w4xPP8xDNu6a-6Qqo4n2czx_YvM0Rnt' };
-      case 'revision-tecnica': return { title: 'Revisión Técnica', displayRole: 'Depto. Arquitectura', img: '' };
+      case 'revision-tecnica': return { title: 'Revisión Técnica', displayRole: 'Revisor técnico', img: '' };
       case 'control-obras': return { title: 'Control de Obras', displayRole: 'Inspector (Control)', img: 'https://lh3.googleusercontent.com/aida-public/AB6AXuBj72r4YsI323w-356f9N1W6xyFyJdX6c6-zLQNRGrXXgTmW3QWdTx9RxyPiYMaMi1S5FFctr-SEMLXjmxSvGRSc7eQ8e_tegnTDelacB3acCtnK--u7YE9UV_G86S8HpYomgYAoUv8MVQjxUP_QcST9xAvTzfH51_tiDZNzz-cBSCSEVTiEJeQZUl6L8UKGLuOHtMa4pRF7k-H9fQGGq2S0w4xPP8xDNu6a-6Qqo4n2czx_YvM0Rnt' };
       case 'legal': return { title: 'Depto. Legal', displayRole: 'Revisor Legal', img: '' };
       case 'electrica': return { title: 'Ing. Eléctrica', displayRole: 'Ing. Eléctrico', img: '' };
       case 'hidrosanitaria': return { title: 'Ing. Hidrosanitaria', displayRole: 'Ing. Hidrosanitario', img: '' };
       case 'paisajismo': return { title: 'Paisajismo', displayRole: 'Paisajista', img: '' };
+      case 'mensura': return { title: 'Mensura', displayRole: 'Revisor de mensura', img: '' };
+      case 'seguridad': return { title: 'Seguridad', displayRole: 'Control de seguridad', img: '' };
       case 'admin': return { title: 'Administración', displayRole: 'Administrador General', img: '' };
       default: return { title: 'Costasur CDE', displayRole: 'Usuario', img: '' };
     }
@@ -130,4 +132,3 @@ export function TopBar({ role, onToggleMobileMenu }: { role: string; onToggleMob
     </header>
   );
 }
-
