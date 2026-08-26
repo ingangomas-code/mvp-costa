@@ -2,6 +2,8 @@
 import type { Session } from "@supabase/supabase-js";
 import { isSupabaseConfigured, supabase } from "../lib/supabase";
 import type { Profile, RoleKey, UserRole } from "../lib/cde-types";
+import type { DemoProfile } from "../lib/demo-profiles";
+import { DEMO_PROFILES } from "../lib/demo-profiles";
 
 type AuthResult = { error: Error | null };
 
@@ -14,6 +16,7 @@ interface SessionContextValue {
   isAuthenticated: boolean;
   isConfigured: boolean;
   signIn: (email: string, password: string) => Promise<AuthResult>;
+  signInDemo: (email: string) => Promise<AuthResult>;
   signOut: () => Promise<AuthResult>;
   refreshProfile: () => Promise<void>;
 }
@@ -34,6 +37,7 @@ export function SessionProvider({ children }: { children: ReactNode }) {
   const [session, setSession] = useState<Session | null>(null);
   const [profile, setProfile] = useState<Profile | null>(null);
   const [roles, setRoles] = useState<UserRole[]>([]);
+  const [demoProfile, setDemoProfile] = useState<DemoProfile | null>(null);
   const [loading, setLoading] = useState(true);
 
   const refreshProfile = async (attempt = 0): Promise<void> => {
@@ -89,17 +93,76 @@ export function SessionProvider({ children }: { children: ReactNode }) {
     void refreshProfile();
   }, [session?.user.id]);
 
-  const value = useMemo<SessionContextValue>(() => ({
-    session, profile, roles, primaryRole: getPrimaryRole(roles), loading,
-    isAuthenticated: Boolean(session), isConfigured: isSupabaseConfigured,
+    const value = useMemo<SessionContextValue>(() => {
+    const demoUserId = demoProfile ? `demo-${demoProfile.email}` : null;
+    const demoSession = demoProfile ? ({
+      user: { id: demoUserId, email: demoProfile.email },
+    } as unknown as Session) : null;
+    const demoProfileRecord = demoProfile ? ({
+      id: demoUserId,
+      email: demoProfile.email,
+      display_name: `${demoProfile.label} Demo`,
+      status: "active",
+      is_demo: true,
+    } as Profile) : null;
+    const demoRole = demoProfile ? ({
+      id: `demo-role-${demoProfile.roleKey}`,
+      user_id: demoUserId,
+      role_key: demoProfile.roleKey,
+      is_active: true,
+    } as UserRole) : null;
+    const activeSession = session ?? demoSession;
+    const activeProfile = profile ?? demoProfileRecord;
+    const activeRoles = roles.length ? roles : (demoRole ? [demoRole] : []);
+
+    return {
+    session: activeSession, profile: activeProfile, roles: activeRoles, primaryRole: getPrimaryRole(activeRoles), loading,
+    isAuthenticated: Boolean(activeSession), isConfigured: isSupabaseConfigured || Boolean(demoProfile),
+
     signIn: async (email, password) => {
       if (!supabase) return { error: new Error("Supabase no está configurado") };
       const { error } = await supabase.auth.signInWithPassword({ email, password });
       return { error: error ? new Error(error.message) : null };
     },
+    signInDemo: async (email) => {
+      const selectedDemo = DEMO_PROFILES.find((item) => item.email === email);
+      if (!selectedDemo) return { error: new Error("Perfil demo no válido") };
+      if (!supabase) {
+        setDemoProfile(selectedDemo);
+        setLoading(false);
+        return { error: null };
+      }
+      try {
+        const response = await fetch("/api/demo-login", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ email }),
+        });
+        const payload = await response.json() as { error?: string; access_token?: string; refresh_token?: string };
+        if (!response.ok || !payload.access_token || !payload.refresh_token) {
+          return { error: new Error(payload.error ?? "No fue posible iniciar la sesión demo.") };
+        }
+        const { error } = await supabase.auth.setSession({
+          access_token: payload.access_token,
+          refresh_token: payload.refresh_token,
+        });
+        if (!error) setDemoProfile(null);
+        return { error: error ? new Error(error.message) : null };
+      } catch {
+        return { error: new Error("El acceso demo no está disponible en este entorno.") };
+      }
+    },
     signOut: async () => {
-      if (!supabase) return { error: new Error("Supabase no está configurado") };
+      if (!supabase) {
+        setDemoProfile(null);
+        setSession(null);
+        setProfile(null);
+        setRoles([]);
+        setLoading(false);
+        return { error: null };
+      }
       const { error } = await supabase.auth.signOut();
+      setDemoProfile(null);
       setSession(null);
       setProfile(null);
       setRoles([]);
@@ -107,7 +170,8 @@ export function SessionProvider({ children }: { children: ReactNode }) {
       return { error: error ? new Error(error.message) : null };
     },
     refreshProfile,
-  }), [loading, profile, roles, session]);
+    };
+  }, [demoProfile, loading, profile, roles, session]);
 
   return <SessionContext.Provider value={value}>{children}</SessionContext.Provider>;
 }

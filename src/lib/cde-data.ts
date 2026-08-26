@@ -1,4 +1,5 @@
-﻿import { requireSupabase } from "./supabase";
+﻿import { requireSupabase, supabase } from "./supabase";
+
 import type { DocumentAnnotation, DocumentRecord, DocumentVersion, ProjectMember, ProjectRecord, PropertyRecord } from "./cde-types";
 
 export interface PortfolioRow extends PropertyRecord {
@@ -12,8 +13,12 @@ export interface ProjectWorkspace {
   events: Array<{ id: string; event_type: string; comment: string | null; created_at: string; actor_role: string | null }>;
 }
 
+const isLocalDemoUser = (userId: string) => !supabase && userId.startsWith("demo-");
+
 export async function getOwnerPortfolio(userId: string): Promise<PortfolioRow[]> {
+  if (isLocalDemoUser(userId)) return [];
   const client = requireSupabase();
+
   const { data: properties, error: propertyError } = await client
     .from("properties")
     .select("*")
@@ -60,7 +65,9 @@ export async function getProjectWorkspace(projectId: string): Promise<ProjectWor
 }
 
 export async function getAdminProjects(): Promise<ProjectRecord[]> {
+  if (!supabase) return [];
   const client = requireSupabase();
+
   const { data, error } = await client.from("projects").select("*").order("updated_at", { ascending: false });
   if (error) throw error;
   return (data ?? []) as ProjectRecord[];
@@ -204,6 +211,7 @@ export interface NotificationRecord {
 }
 
 export async function getUserNotifications(userId: string) {
+  if (isLocalDemoUser(userId)) return [] as NotificationRecord[];
   const client = requireSupabase();
   const { data, error } = await client.from("notifications").select("id,user_id,project_id,notification_type,title,body,read_at,created_at").eq("user_id", userId).order("created_at", { ascending: false }).limit(20);
   if (error) throw error;
@@ -341,6 +349,7 @@ export async function resolveContractorRequest(input: { requestId: string; statu
 
 
 export async function getProjectsForUser(userId: string) {
+  if (isLocalDemoUser(userId)) return [] as ProjectRecord[];
   const client = requireSupabase();
   const { data: memberships, error: membershipError } = await client.from("project_members").select("project_id").eq("user_id", userId).eq("status", "active");
   if (membershipError) throw membershipError;
@@ -352,6 +361,7 @@ export async function getProjectsForUser(userId: string) {
 }
 
 export async function getAdminProperties(): Promise<PropertyRecord[]> {
+  if (!supabase) return [];
   const client = requireSupabase();
   const { data, error } = await client.from("properties").select("*").order("property_code", { ascending: true });
   if (error) throw error;

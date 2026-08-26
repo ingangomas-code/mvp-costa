@@ -1,14 +1,16 @@
 ﻿import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useSession } from "../context/SessionContext";
+import { DEFAULT_DEMO_PROFILE, DEMO_PROFILES } from "../lib/demo-profiles";
 
 export function Login() {
   const navigate = useNavigate();
-  const [email, setEmail] = useState("");
+  const [selectedProfile, setSelectedProfile] = useState(DEFAULT_DEMO_PROFILE);
+  const [email, setEmail] = useState(DEFAULT_DEMO_PROFILE.email);
   const [password, setPassword] = useState("");
   const [menuOpen, setMenuOpen] = useState(false);
 
-  const { signIn, isConfigured, isAuthenticated, primaryRole } = useSession();
+  const { signInDemo, isAuthenticated, primaryRole } = useSession();
   const [errorMessage, setErrorMessage] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -27,12 +29,9 @@ export function Login() {
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setErrorMessage("");
-    if (!isConfigured) {
-      setErrorMessage("La conexión con Costasur todavía no está configurada en este entorno.");
-      return;
-    }
     setIsSubmitting(true);
-    const { error } = await signIn(email.trim(), password);
+    const { error } = await signInDemo(email);
+
     setIsSubmitting(false);
     if (error) setErrorMessage(error.message || "No fue posible iniciar sesión.");
   };
@@ -90,28 +89,49 @@ export function Login() {
                 <div className="rounded-2xl border border-error/30 bg-error/10 px-4 py-3 text-sm text-error">{errorMessage}</div>
               )}
               <div>
-                <label className="block text-xs font-bold text-secondary uppercase tracking-wider mb-2">
+                <label htmlFor="demo-profile" className="block text-xs font-bold text-secondary uppercase tracking-wider mb-2">
+                  Perfil de demostración
+                </label>
+                <select
+                  id="demo-profile"
+                  value={selectedProfile.email}
+                  onChange={(event) => {
+                    const profile = DEMO_PROFILES.find((item) => item.email === event.target.value) ?? DEFAULT_DEMO_PROFILE;
+                    setSelectedProfile(profile);
+                    setEmail(profile.email);
+                    setErrorMessage("");
+                  }}
+                  className="w-full bg-white border-2 border-[#003B70] rounded-xl py-3 px-4 text-on-surface focus:ring-2 focus:ring-[#003B70] focus:border-[#003B70] transition-all outline-none"
+                >
+                  {DEMO_PROFILES.map((profile) => (
+                    <option key={profile.email} value={profile.email}>{profile.label}</option>
+                  ))}
+                </select>
+              </div>
+
+              <div>
+                <label htmlFor="demo-email" className="block text-xs font-bold text-secondary uppercase tracking-wider mb-2">
                   Usuario / Correo Electrónico
                 </label>
-                <input 
-                  type="text" 
-                  required
+                <input
+                  id="demo-email"
+                  type="text"
                   value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  className="w-full bg-white border border-outline-variant/50 rounded-xl py-3 px-4 text-on-surface focus:ring-2 focus:ring-[#003B70] focus:border-[#003B70] transition-all outline-none"
-                  placeholder="ej. arquitecto@demo.com"
+                  readOnly
+                  className="w-full bg-white border border-outline-variant/50 rounded-xl py-3 px-4 text-on-surface transition-all outline-none"
+                  placeholder="usuario@costasur.com"
                 />
               </div>
-              
+
               <div>
-                <label className="block text-xs font-bold text-secondary uppercase tracking-wider mb-2">
+                <label htmlFor="demo-password" className="block text-xs font-bold text-secondary uppercase tracking-wider mb-2">
                   Contraseña
                 </label>
-                <input 
-                  type="password" 
-                  required
+                <input
+                  id="demo-password"
+                  type="password"
                   value={password}
-                  onChange={(e) => setPassword(e.target.value)}
+                  onChange={(event) => setPassword(event.target.value)}
                   className="w-full bg-white border border-outline-variant/50 rounded-xl py-3 px-4 text-on-surface focus:ring-2 focus:ring-[#003B70] focus:border-[#003B70] transition-all outline-none"
                   placeholder="••••••••"
                 />
@@ -129,8 +149,7 @@ export function Login() {
             {/* Helper Note for Prototype Navigation */}
             <div className="mt-10 pt-6 border-t border-outline-variant/20">
               <p className="text-xs text-[#4A5056] text-center leading-relaxed">
-                *Info Demo: Para probar los distintos perfiles, ingrese como usuario uno de los siguientes: <br/>
-                <span className="font-semibold text-[#4A5056]">admin, propietario, arquitecto, contratista, revisión técnica, control de obras, legal, eléctrica, hidrosanitaria, paisajismo, mensura y seguridad</span>
+                Seleccione el perfil inicial y pulse Iniciar Sesión. La contraseña es opcional para esta demostración.
               </p>
             </div>
           </div>
